@@ -1,187 +1,457 @@
-# SkillForge
+# 🚀 SkillForge — AI-Powered Student Skills & Career Development Platform
 
-AI-powered platform that evaluates a student's current skills and generates a
-practical career development roadmap. Built for PS-03, LoopLab Looplearn
-Hackathon 2026.
+> **Know your skills. Discover your gaps. Build the right projects. Become career-ready.**
 
-- [`docs/architecture.md`](docs/architecture.md) — service breakdown, diagram, agent tools
-- [`docs/db-schema.md`](docs/db-schema.md) — database schema
+SkillForge is an AI-powered student career development platform designed to help university students understand where they currently stand, identify missing skills, receive personalized learning recommendations, and build a practical roadmap toward their target career.
 
-## What's included
+Instead of giving students generic course lists, SkillForge connects **skills → gaps → projects → learning → career readiness** in one platform.
 
-- **Student flow**: signup → profile (education, skills, projects,
-  certifications, career goal) → skill assessment (Python, Web Development,
-  Git, DevOps, AI, Database) → skill-gap analysis → generated roadmap → AI
-  assistant (RAG chat and an agentic career-planning assistant)
-- **Mentor/Admin flow**: browse students, view their profiles
-- **Auth & RBAC**: JWT-based, three roles (student/mentor/admin)
-- **Microservices**: Auth, Core (profile), Analyzer (Python/OOP scoring
-  engine), AI (RAG + agent), behind an Nginx API gateway
-- **DevOps**: Docker Compose (local), Kubernetes manifests, Terraform
-  (managed Postgres + container registry), a seed shell script, GitHub
-  Actions CI
+---
 
-## Run it on your laptop
+## 🎯 Problem
 
-**Requirements**: Docker Desktop (or Docker Engine + Compose) installed and
-running. That's the only requirement — everything else runs inside
-containers.
+Many students want careers in software engineering, AI, data science, cybersecurity, and other technology fields, but they often don't know:
 
-```bash
-git clone <your-repo-url>
+- What skills their target career actually requires
+- Which skills they already have
+- Which skills they are missing
+- What projects they should build
+- What to learn next
+- Whether they are actually job-ready
+- How their university coursework connects to industry requirements
+
+Students often spend months learning random technologies without a clear roadmap.
+
+### 💡 SkillForge solves this by creating a personalized skill-to-career roadmap.
+
+---
+
+# 🌟 Key Features
+
+## 🧠 AI-Powered Skill Gap Analysis
+
+Students can provide their current skills, education, experience, and career goals.
+
+SkillForge analyzes the profile and identifies:
+
+- Current strengths
+- Missing skills
+- Skill priorities
+- Recommended next steps
+- Career readiness areas
+
+---
+
+## 🎯 Career Goal Mapping
+
+Students can select a target career such as:
+
+- Software Engineer
+- Full-Stack Developer
+- AI/ML Engineer
+- Data Scientist
+- Data Analyst
+- Cybersecurity Engineer
+- Cloud Engineer
+- DevOps Engineer
+
+The platform maps the selected career to the skills required to pursue it.
+
+---
+
+## 📊 Personalized Skill Roadmap
+
+Instead of giving every student the same learning path, SkillForge generates a roadmap based on their current level.
+
+Example:
+
+```text
+Current Skills
+      ↓
+Skill Assessment
+      ↓
+Skill Gap Analysis
+      ↓
+Priority Skills
+      ↓
+Learning Roadmap
+      ↓
+Project Recommendations
+      ↓
+Career Readiness
+🛠️ Project Recommendations
+
+SkillForge recommends practical projects that students can build to demonstrate their skills.
+
+Projects are selected according to:
+
+Target career
+Current skill level
+Missing skills
+Learning objectives
+
+This helps students turn theoretical knowledge into portfolio-ready work.
+
+🤖 AI Career Assistant
+
+The AI assistant provides personalized guidance for questions such as:
+
+"What should I learn after Java?"
+
+"Which projects should I build for an AI internship?"
+
+"What skills am I missing for a full-stack developer role?"
+
+"How can I become internship-ready?"
+
+The assistant uses the student's profile and SkillForge's knowledge base to provide contextual recommendations.
+
+📚 AI + RAG Knowledge Base
+
+SkillForge uses Retrieval-Augmented Generation (RAG) to provide more relevant career and learning recommendations.
+
+The system combines:
+
+Student profile data
+Career skill requirements
+Learning resources
+Project knowledge
+AI reasoning
+
+with a vector knowledge base powered by ChromaDB.
+
+🏗️ System Architecture
+                         ┌─────────────────────┐
+                         │      Frontend       │
+                         │    React + Vite     │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │       Gateway       │
+                         │       Nginx         │
+                         └──────────┬──────────┘
+                                    │
+              ┌─────────────────────┼─────────────────────┐
+              │                     │                     │
+              ▼                     ▼                     ▼
+       ┌────────────┐       ┌────────────┐       ┌────────────┐
+       │    Auth    │       │    Core    │       │  Analyzer  │
+       │  Service   │       │  Service   │       │  Service   │
+       └─────┬──────┘       └─────┬──────┘       └─────┬──────┘
+             │                    │                    │
+             └────────────────────┼────────────────────┘
+                                  ▼
+                         ┌─────────────────┐
+                         │   PostgreSQL    │
+                         │    Database     │
+                         └─────────────────┘
+
+
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │   AI Service    │
+                         │  Claude + RAG   │
+                         └────────┬────────┘
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │    ChromaDB     │
+                         │ Vector Database  │
+                         └─────────────────┘
+🧩 Technology Stack
+Frontend
+React
+Vite
+JavaScript / JSX
+Tailwind CSS
+React Router
+Backend
+Python
+FastAPI
+Uvicorn
+REST APIs
+Database
+PostgreSQL
+AI
+Anthropic Claude
+Retrieval-Augmented Generation (RAG)
+ChromaDB
+Vector embeddings
+Infrastructure
+Docker
+Docker Compose
+Nginx
+GitHub
+Deployment
+Vercel — frontend
+Docker-based deployment architecture for backend services
+📁 Project Structure
+skillforge/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+│
+├── services/
+│   │
+│   ├── auth/
+│   │   ├── main.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   │
+│   ├── core/
+│   │   ├── main.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   │
+│   ├── analyzer/
+│   │   ├── main.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   │
+│   ├── ai/
+│   │   ├── main.py
+│   │   ├── rag.py
+│   │   ├── seed_kb.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   │
+│   ├── gateway/
+│   │   ├── nginx.conf
+│   │   └── Dockerfile
+│   │
+│   └── common/
+│
+├── docs/
+│
+├── scripts/
+│
+├── infra/
+│
+├── docker-compose.yml
+├── render.yaml
+├── .env.example
+└── README.md
+🔐 Authentication
+
+SkillForge includes an authentication service responsible for:
+
+User registration
+Login
+JWT-based authentication
+Secure API authorization
+User-specific career data
+
+Authentication is separated into its own backend service to keep the architecture modular and scalable.
+
+🤖 AI Workflow
+
+The AI pipeline follows this process:
+
+Student Profile
+      ↓
+Career Goal
+      ↓
+Skill Analysis
+      ↓
+Skill Gap Identification
+      ↓
+Knowledge Retrieval
+      ↓
+AI Reasoning
+      ↓
+Personalized Recommendations
+      ↓
+Learning + Project Roadmap
+
+This allows SkillForge to provide recommendations based on the student's actual situation rather than generic career advice.
+
+📈 Example Use Case
+Student
+
+A student wants to become a:
+
+Full-Stack Developer
+
+Current skills:
+
+HTML
+CSS
+Java
+Basic JavaScript
+
+SkillForge identifies missing areas such as:
+
+Advanced JavaScript
+React
+REST APIs
+Backend Development
+Databases
+Git/GitHub
+Deployment
+
+The platform then generates a prioritized roadmap:
+
+1. Strengthen JavaScript
+        ↓
+2. Learn React
+        ↓
+3. Learn REST APIs
+        ↓
+4. Build Full-Stack Project
+        ↓
+5. Learn Deployment
+        ↓
+6. Build Portfolio
+        ↓
+7. Internship Preparation
+🌍 Sustainable Development Goals
+
+SkillForge contributes to multiple United Nations Sustainable Development Goals.
+
+🎓 SDG 4 — Quality Education
+
+Provides personalized and accessible learning guidance for students.
+
+💼 SDG 8 — Decent Work & Economic Growth
+
+Helps students become more employable and career-ready.
+
+💡 SDG 9 — Industry, Innovation & Infrastructure
+
+Uses AI and modern software infrastructure to improve career development.
+
+🤝 SDG 10 — Reduced Inequalities
+
+Provides structured career guidance to students who may not have access to professional mentorship.
+
+🚀 Getting Started
+Prerequisites
+
+Install:
+
+Git
+Docker
+Docker Compose
+
+An Anthropic API key is required for AI functionality.
+
+1. Clone the repository
+git clone https://github.com/ridafatimashahbaz/skillforge.git
 cd skillforge
+2. Configure environment variables
+
+Copy the example environment file:
 
 cp .env.example .env
-# edit .env and set ANTHROPIC_API_KEY (get one at https://console.anthropic.com/)
-# JWT_SECRET can be any random string
 
-./scripts/setup.sh
-```
+Add your API configuration:
 
-This builds and starts every service, waits for Postgres, and seeds both the
-assessment question bank and the RAG knowledge base. First run takes a few
-minutes (Docker image builds + a one-time embedding-model download by the AI
-service — it needs normal internet access for that).
+ANTHROPIC_API_KEY=your_api_key
+ANTHROPIC_MODEL=claude-sonnet-4-6
+JWT_SECRET=your_secure_secret
+3. Start SkillForge
+docker compose up --build
 
-When it's done:
+The main services will start through Docker Compose.
 
-| What | URL |
-|---|---|
-| App (frontend) | http://localhost:3000 |
-| API Gateway | http://localhost:8080 |
-| Auth service docs | http://localhost:8001/docs |
-| Core service docs | http://localhost:8002/docs |
-| Analyzer service docs | http://localhost:8003/docs |
-| AI service docs | http://localhost:8004/docs |
+4. Access the application
 
-Sign up as a **student** to try the main flow, or as a **mentor**/**admin** to
-see the student-browsing dashboard.
+Frontend:
 
-Stop everything: `docker compose down`. Wipe all data too: `docker compose down -v`.
+http://localhost:3000
 
-**If you don't have Docker**: install Docker Desktop from
-https://www.docker.com/products/docker-desktop/ — there's no supported way to
-run this without containers, since it's genuinely five separate services plus
-two databases.
+Gateway:
 
-## Push it to GitHub
+http://localhost:8080
+🧪 Development
 
-```bash
-git init
-git add .
-git commit -m "SkillForge: PS-03 submission"
+Run the frontend separately:
 
-# create an empty repo on github.com first (no README/license, so it stays empty), then:
-git remote add origin https://github.com/<your-username>/<your-repo-name>.git
-git branch -M main
-git push -u origin main
-```
+cd frontend
+npm install
+npm run dev
 
-That's your GitHub repository link for submission:
-`https://github.com/<your-username>/<your-repo-name>`
+The development server runs on:
 
-## Deploy it live (get a public link)
+http://localhost:5173
+🔌 Backend Services
+Service	Purpose
+Auth	Authentication & JWT
+Core	Student and career data
+Analyzer	Skill gap analysis
+AI	AI recommendations & RAG
+ChromaDB	Vector knowledge base
+Gateway	API routing
+PostgreSQL	Persistent data storage
+Frontend	User interface
+🛡️ Security
 
-This uses [Render](https://render.com)'s free tier via the included
-`render.yaml` blueprint — no payment info needed, ~10 minutes.
+The project uses:
 
-1. Push this repo to GitHub (steps above) if you haven't.
-2. Go to https://dashboard.render.com/blueprints → **New Blueprint Instance**.
-3. Connect your GitHub account and select this repository. Render reads
-   `render.yaml` automatically and lists everything it's about to create:
-   a Postgres database, five private backend services, and two public
-   services (`gateway`, `frontend`).
-4. When prompted, paste your **ANTHROPIC_API_KEY**. Everything else
-   (`JWT_SECRET`, database credentials, internal service URLs) is filled in
-   automatically.
-5. Click **Apply**. Render builds and starts every service — first deploy
-   takes 10-15 minutes since it's building 7 Docker images.
-6. Once it's live, open the **frontend** service in the Render dashboard —
-   its URL (`https://skillforge-frontend-xxxx.onrender.com`) is your public
-   link. Share that.
-7. One manual step Render can't automate: seed the data. In the Render
-   dashboard, open the **analyzer** service → **Shell**, and run:
-   ```bash
-   python scripts/seed_questions.py
-   ```
-   Then open the **ai** service → **Shell** and run:
-   ```bash
-   python -m services.ai.seed_kb
-   ```
-   (Only needed once — the data persists after that.)
+JWT authentication
+Environment variables for secrets
+Separate backend services
+Docker-based isolation
+API gateway routing
+No secrets committed to GitHub
 
-**Free-tier note**: Render's free private services spin down after inactivity
-and take ~30-60 seconds to wake up on the next request — normal for a
-hackathon demo link, not something to worry about.
+Never commit .env or API keys to the repository.
 
-## Deploying to Kubernetes instead
+📊 Why SkillForge?
 
-`infra/k8s/` has Deployment + Service manifests for every component plus an
-Ingress. To try it against a local cluster (kind or minikube):
+Traditional career platforms often answer:
 
-```bash
-# build images locally first, e.g.:
-docker build -f services/auth/Dockerfile -t skillforge-auth:latest .
-# (repeat for core, analyzer, ai, gateway; docker build -t skillforge-frontend:latest ./frontend)
+"Here are courses you can take."
 
-kubectl apply -f infra/k8s/
-kubectl create secret generic skillforge-secrets -n skillforge \
-  --from-literal=JWT_SECRET=some-random-string \
-  --from-literal=ANTHROPIC_API_KEY=your-key \
-  --from-literal=POSTGRES_PASSWORD=skillforge \
-  --dry-run=client -o yaml | kubectl apply -f -
-```
+SkillForge aims to answer:
 
-## Submitting for PS-03
+"Here is where you are, here is where you need to be, and here is exactly what you should do next."
 
-The submission checklist from the problem statement, and where each item is:
+The platform transforms career development from a collection of disconnected resources into a personalized, measurable roadmap.
 
-| Item | Location |
-|---|---|
-| GitHub repository | this repo (push it per instructions above) |
-| Live application | Render deploy link (above) |
-| Student dashboard | `frontend/src/pages/StudentDashboard.tsx` |
-| Admin/mentor dashboard | `frontend/src/pages/MentorDashboard.tsx` |
-| AI assistant | `services/ai/main.py` (`/chat`), used in the "AI assistant" tab |
-| RAG knowledge base | `services/ai/rag.py`, `services/ai/seed_kb.py` |
-| Agent implementation | `services/ai/agent.py` (career planning agent, 4 tools) |
-| Python service | `services/analyzer/analyzer.py` (`SkillAnalyzer`, `SkillGapCalculator`, `RoadmapGenerator`) |
-| API documentation | auto-generated Swagger UI per service at `/docs` (see table above) |
-| Architecture diagram | `docs/architecture.md` |
-| Docker files | one `Dockerfile` per service under `services/*/` and `frontend/` |
-| Kubernetes manifests | `infra/k8s/` |
-| Terraform files | `infra/terraform/` |
-| Linux shell script | `scripts/setup.sh` |
-| Database schema | `docs/db-schema.md` |
-| Demo video | record yourself walking through the flow below — not something I can generate for you |
-| Presentation | build from `docs/architecture.md` + this README — also not something I can generate here |
-| README | this file |
+🔮 Future Improvements
 
-## Demo flow (matches the required demo order)
+Planned improvements include:
 
-1. Sign up (student)
-2. Fill in profile: education, career goal
-3. Add a couple of skills
-4. Take an assessment (pick an area, e.g. Python)
-5. View the roadmap tab → pick a target role → "Generate roadmap" → see
-   skill gaps
-6. Open the AI assistant tab → ask: *"I know Python and basic web
-   development. I want to become an AI engineer. What should I learn next?"*
-   (uses RAG)
-7. Same tab, switch to "Career agent" mode → ask: *"Analyze my profile and
-   tell me what I should learn next."* (uses the agent's tools)
-8. Sign out, sign up again as a mentor → see the student you just created in
-   the mentor dashboard
-9. Point at `docker-compose.yml` / `infra/k8s/` / `infra/terraform/` to show
-   the deployment/containerization pieces
+📄 AI-powered resume analysis
+💼 Internship and job matching
+🔗 LinkedIn profile analysis
+📊 Skill progress tracking
+🏆 Gamified learning
+🎓 University curriculum mapping
+🧑‍💼 Mentor matching
+📈 Industry demand analytics
+🧪 Automated project evaluation
+🎤 AI-powered interview preparation
+🏆 Hackathon Project
 
-## Known limitations (worth being upfront about)
+Project: SkillForge
+Category: AI / Education / Career Development
 
-- Shared Postgres database rather than one-per-service — see
-  `docs/architecture.md` for the reasoning; this is a deliberate hackathon
-  scope decision, not an oversight.
-- No automated tests included — given the time budget, manual verification
-  (documented in this build's process) took priority over a test suite. Add
-  `pytest` tests under each service if you have time before submission.
-- The AI service's embedding model downloads on first startup and needs
-  normal internet access; it's cached after that.
+Relevant SDGs
+SDG 4 — Quality Education
+SDG 8 — Decent Work & Economic Growth
+SDG 9 — Industry, Innovation & Infrastructure
+SDG 10 — Reduced Inequalities
+🔗 Project Links
+GitHub Repository
+
+https://github.com/ridafatimashahbaz/skillforge
+
+Live Application
+
+https://skillforge-woad-seven.vercel.app/
+
+👩‍💻 Team
+
+Built as an AI-powered solution for student career development.
+
+⭐ Support
+
+If you find SkillForge useful, consider giving the repository a ⭐ on GitHub.
