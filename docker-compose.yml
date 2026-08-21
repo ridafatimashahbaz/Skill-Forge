@@ -1,0 +1,123 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: skillforge
+      POSTGRES_PASSWORD: skillforge
+      POSTGRES_DB: skillforge
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skillforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  chroma:
+    image: chromadb/chroma:0.5.5
+    ports:
+      - "8005:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+
+  auth:
+    build:
+      context: .
+      dockerfile: services/auth/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://skillforge:skillforge@postgres:5432/skillforge
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8001:8000"
+
+  core:
+    build:
+      context: .
+      dockerfile: services/core/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://skillforge:skillforge@postgres:5432/skillforge
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8002:8000"
+
+  analyzer:
+    build:
+      context: .
+      dockerfile: services/analyzer/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://skillforge:skillforge@postgres:5432/skillforge
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8003:8000"
+
+  ai:
+    build:
+      context: .
+      dockerfile: services/ai/Dockerfile
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-4-6}
+      CORE_SERVICE_URL: http://core:8000
+      ANALYZER_SERVICE_URL: http://analyzer:8000
+      CHROMA_HOST: chroma
+      CHROMA_PORT: 8000
+    depends_on:
+      - chroma
+      - core
+      - analyzer
+    ports:
+      - "8004:8000"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    depends_on:
+      - auth
+      - core
+      - analyzer
+      - ai
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080
+    depends_on:
+      - gateway
+    ports:
+      - "3000:80"
+
+  seed:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://skillforge:skillforge@postgres:5432/skillforge
+      CHROMA_HOST: chroma
+      CHROMA_PORT: 8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chroma:
+        condition: service_started
+    profiles: ["tools"]
+
+volumes:
+  pg_data:
+  chroma_data:
